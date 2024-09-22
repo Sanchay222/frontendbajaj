@@ -20,7 +20,7 @@ function App() {
       }
 
       // Send POST request to server
-      const res = await axios.post('https://backendbajaj-production-9da4.up.railway.app/bfhl', jsonInput);
+      const res = await axios.post('http://https://backendbajaj-production-9da4.up.railway.app/bfhl', jsonInput);
       setResponse(res.data);
       setError(null);
     } catch (err) {
@@ -60,16 +60,34 @@ function App() {
   };
 
   return (
-    <div>
-      <h1>BFHL API Frontend</h1>
+    <div
+      style={{
+        fontFamily: 'Arial, sans-serif',
+        maxWidth: '600px',
+        margin: '0 auto',
+        padding: '20px',
+        backgroundColor: '#f8f9fa',
+        borderRadius: '10px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      }}
+    >
+      <h1
+        style={{
+          color: '#333',
+          textAlign: 'center',
+          marginBottom: '20px',
+        }}
+      >
+        BFHL API Frontend
+      </h1>
 
       {/* API Input Paragraph Heading */}
       <p
         style={{
-          fontSize: '20px',     // Adjust the font size for emphasis
-          fontWeight: 'bold',   // Make it bold to look like a heading
-          marginTop: '20px',    // Space between the main heading and this paragraph
-          marginBottom: '10px'  // Space between the paragraph and textarea
+          fontSize: '16px',
+          fontWeight: 'bold',
+          marginBottom: '8px',
+          color: '#555',
         }}
       >
         API Input
@@ -80,15 +98,16 @@ function App() {
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder='{"data": ["1", "3", "A", "b", "5", "C"]}'  // Example input format
-          rows="1"  // Limits the number of rows to 1, making it a single line
+          placeholder='{"data": ["1", "3", "A", "b", "5", "C"]}'
+          rows="1"
           style={{
-            width: '100%',   // Full-width
-            height: '30px',  // Adjusted height to one line
-            padding: '10px', // Add padding for better appearance
-            borderRadius: '10px', // Rounded corners
-            border: '1px solid #ccc', // Border style
-            outline: 'none', // Remove default outline
+            width: '100%',
+            padding: '8px 12px',
+            borderRadius: '8px',
+            border: '1px solid #ccc',
+            fontSize: '14px',
+            boxSizing: 'border-box',
+            marginBottom: '12px',
           }}
         />
 
@@ -97,16 +116,18 @@ function App() {
           <button
             type="submit"
             style={{
-              width: '100%',    // Full-width button
-              backgroundColor: 'blue',  // Blue background
-              color: 'white',   // White text
-              padding: '10px',  // Padding for better appearance
-              marginTop: '10px', // Add some margin above the button
-              borderRadius: '10px', // Rounded corners
-              border: 'none', // Remove border
+              width: '100%',
+              backgroundColor: '#007bff',
+              color: 'white',
+              padding: '10px',
+              borderRadius: '8px',
+              border: 'none',
               cursor: 'pointer',
-              fontSize: '16px'  // Adjust font size
+              fontSize: '14px',
+              transition: 'background-color 0.3s ease',
             }}
+            onMouseOver={(e) => (e.target.style.backgroundColor = '#0056b3')}
+            onMouseOut={(e) => (e.target.style.backgroundColor = '#007bff')}
           >
             Submit
           </button>
@@ -117,20 +138,31 @@ function App() {
 
       {response && (
         <>
-          <h2>Multi Filters</h2>
+          <h2
+            style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              marginTop: '20px',
+              marginBottom: '10px',
+              color: '#555',
+            }}
+          >
+            Multi Filters
+          </h2>
 
           {/* Multi Filters Dropdown Menu styled like API Input */}
           <select
             multiple
             onChange={handleDropdownChange}
             style={{
-              width: '100%',    // Full-width
-              padding: '10px',  // Padding for better appearance
-              marginTop: '10px', // Margin above
-              borderRadius: '10px', // Rounded corners
-              border: '1px solid #ccc', // Border style
-              height: '100px',  // Enough height for multiple selections
-              outline: 'none',  // Remove default outline
+              width: '100%',
+              padding: '8px',
+              borderRadius: '8px',
+              border: '1px solid #ccc',
+              height: '80px',
+              fontSize: '14px',
+              boxSizing: 'border-box',
+              marginBottom: '20px',
             }}
           >
             <option value="Numbers">Numbers</option>
@@ -140,7 +172,16 @@ function App() {
             <option value="Highest Lowercase Alphabet">Highest Lowercase Alphabet</option>
           </select>
 
-          {renderResponse()}
+          <div
+            style={{
+              backgroundColor: '#fff',
+              padding: '12px',
+              borderRadius: '8px',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            {renderResponse()}
+          </div>
         </>
       )}
     </div>
