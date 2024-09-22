@@ -11,8 +11,16 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Parse the input to ensure it's a valid JSON
       const jsonInput = JSON.parse(input);
-      const res = await axios.post('https://backendbajaj-production-9da4.up.railway.app/bfhl', jsonInput);
+
+      // Ensure the input is in the expected format
+      if (!jsonInput.data || !Array.isArray(jsonInput.data)) {
+        throw new Error("Invalid format. Expecting {\"data\": [\"1\", \"3\", \"A\", \"b\", \"5\", \"C\"]}");
+      }
+
+      // Send POST request to server
+      const res = await axios.post('http://localhost:5000/bfhl', jsonInput);
       setResponse(res.data);
       setError(null);
     } catch (err) {
@@ -21,14 +29,10 @@ function App() {
     }
   };
 
-  // Handle option change (multi-select)
-  const handleOptionChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setSelectedOptions([...selectedOptions, value]);
-    } else {
-      setSelectedOptions(selectedOptions.filter(option => option !== value));
-    }
+  // Handle dropdown option changes (multi-select)
+  const handleDropdownChange = (e) => {
+    const selected = Array.from(e.target.selectedOptions, (option) => option.value);
+    setSelectedOptions(selected);
   };
 
   // Render response based on selected options
@@ -42,6 +46,12 @@ function App() {
     if (selectedOptions.includes('Alphabets')) {
       output.alphabets = response.alphabets;
     }
+    if (selectedOptions.includes('Even Numbers')) {
+      output.evenNumbers = response.numbers.filter(n => n % 2 === 0);
+    }
+    if (selectedOptions.includes('Odd Numbers')) {
+      output.oddNumbers = response.numbers.filter(n => n % 2 !== 0);
+    }
     if (selectedOptions.includes('Highest Lowercase Alphabet')) {
       output.highest_lowercase_alphabet = response.highest_lowercase_alphabet;
     }
@@ -52,44 +62,84 @@ function App() {
   return (
     <div>
       <h1>BFHL API Frontend</h1>
+
+      {/* API Input Paragraph Heading */}
+      <p
+        style={{
+          fontSize: '20px',     // Adjust the font size for emphasis
+          fontWeight: 'bold',   // Make it bold to look like a heading
+          marginTop: '20px',    // Space between the main heading and this paragraph
+          marginBottom: '10px'  // Space between the paragraph and textarea
+        }}
+      >
+        API Input
+      </p>
+
       <form onSubmit={handleSubmit}>
+        {/* Single-line textarea with rounded corners */}
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder='Enter JSON data'
+          placeholder='{"data": ["1", "3", "A", "b", "5", "C"]}'  // Example input format
+          rows="1"  // Limits the number of rows to 1, making it a single line
+          style={{
+            width: '100%',   // Full-width
+            height: '30px',  // Adjusted height to one line
+            padding: '10px', // Add padding for better appearance
+            borderRadius: '10px', // Rounded corners
+            border: '1px solid #ccc', // Border style
+            outline: 'none', // Remove default outline
+          }}
         />
-        <button type="submit">Submit</button>
+
+        <div>
+          {/* Submit button with rounded corners */}
+          <button
+            type="submit"
+            style={{
+              width: '100%',    // Full-width button
+              backgroundColor: 'blue',  // Blue background
+              color: 'white',   // White text
+              padding: '10px',  // Padding for better appearance
+              marginTop: '10px', // Add some margin above the button
+              borderRadius: '10px', // Rounded corners
+              border: 'none', // Remove border
+              cursor: 'pointer',
+              fontSize: '16px'  // Adjust font size
+            }}
+          >
+            Submit
+          </button>
+        </div>
       </form>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {response && (
         <>
-          <h2>Select Data to Display</h2>
-          <label>
-            <input
-              type="checkbox"
-              value="Numbers"
-              onChange={handleOptionChange}
-            />
-            Numbers
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="Alphabets"
-              onChange={handleOptionChange}
-            />
-            Alphabets
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="Highest Lowercase Alphabet"
-              onChange={handleOptionChange}
-            />
-            Highest Lowercase Alphabet
-          </label>
+          <h2>Multi Filters</h2>
+
+          {/* Multi Filters Dropdown Menu styled like API Input */}
+          <select
+            multiple
+            onChange={handleDropdownChange}
+            style={{
+              width: '100%',    // Full-width
+              padding: '10px',  // Padding for better appearance
+              marginTop: '10px', // Margin above
+              borderRadius: '10px', // Rounded corners
+              border: '1px solid #ccc', // Border style
+              height: '100px',  // Enough height for multiple selections
+              outline: 'none',  // Remove default outline
+            }}
+          >
+            <option value="Numbers">Numbers</option>
+            <option value="Alphabets">Alphabets</option>
+            <option value="Even Numbers">Even Numbers</option>
+            <option value="Odd Numbers">Odd Numbers</option>
+            <option value="Highest Lowercase Alphabet">Highest Lowercase Alphabet</option>
+          </select>
+
           {renderResponse()}
         </>
       )}
