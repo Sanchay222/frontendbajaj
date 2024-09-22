@@ -167,8 +167,6 @@ function App() {
           >
             <option value="Numbers">Numbers</option>
             <option value="Alphabets">Alphabets</option>
-            <option value="Even Numbers">Even Numbers</option>
-            <option value="Odd Numbers">Odd Numbers</option>
             <option value="Highest Lowercase Alphabet">Highest Lowercase Alphabet</option>
           </select>
 
